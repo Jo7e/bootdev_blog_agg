@@ -1,8 +1,8 @@
 package main
 
 import (
-	"bootdev_blog_agg/internal/database"
-	"database/sql"
+	generichandler "bootdev_blog_agg/pkg/generic"
+	userhandler "bootdev_blog_agg/pkg/user/handlers"
 	"log"
 	"net/http"
 	"os"
@@ -11,26 +11,10 @@ import (
 	_ "github.com/lib/pq"
 )
 
-type apiConfig struct {
-	DB *database.Queries
-}
-
 func main() {
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal(err)
-	}
-
-	dbURL := os.Getenv("DB_URL")
-	db, err := sql.Open("postgres", dbURL)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	dbQueries := database.New(db)
-	apiConfig := &apiConfig{
-		DB: dbQueries,
 	}
 
 	add := os.Getenv("HOST") + ":" + os.Getenv("PORT")
@@ -41,9 +25,9 @@ func main() {
 		Handler: m,
 	}
 
-	m.HandleFunc("GET /v1/users", apiConfig.CreateUserHandler)
-	m.HandleFunc("GET /v1/healthz", HealthzHandler)
-	m.HandleFunc("GET /v1/err", ErrHandler)
+	m.HandleFunc("POST /v1/users", userhandler.CreateUserHandler)
+	m.HandleFunc("GET /v1/healthz", generichandler.HealthzHandler)
+	m.HandleFunc("GET /v1/err", generichandler.ErrHandler)
 
 	log.Fatal(s.ListenAndServe())
 }
