@@ -5,7 +5,6 @@ import (
 	"bootdev_blog_agg/internal/database"
 	"bootdev_blog_agg/sql/config"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"time"
 
@@ -24,7 +23,6 @@ func CreateUserHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *CreateUserCfg) CreateUser(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("LOOOOOOOOOOOL")
 	ctx := r.Context()
 
 	userRequest := CreateUserRequest{}

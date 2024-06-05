@@ -26,6 +26,7 @@ func main() {
 	}
 
 	m.HandleFunc("POST /v1/users", userhandler.CreateUserHandler)
+	m.HandleFunc("GET /v1/users", userhandler.GetUserByApikeyHandler)
 	m.HandleFunc("GET /v1/healthz", generichandler.HealthzHandler)
 	m.HandleFunc("GET /v1/err", generichandler.ErrHandler)
 
