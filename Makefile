@@ -11,3 +11,6 @@ sqlcon:
 
 mig:
 	goose -dir ./sql/schema postgres $(DB_URL) up
+
+run:
+	go run .
