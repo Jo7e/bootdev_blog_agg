@@ -1,4 +1,4 @@
-package config
+package handlers
 
 import (
 	"bootdev_blog_agg/internal/database"
@@ -19,9 +19,7 @@ func GetApiConfig() *ApiConfig {
 	}
 
 	dbQueries := database.New(db)
-	a := &ApiConfig{
+	return &ApiConfig{
 		DB: dbQueries,
 	}
-
-	return a
 }

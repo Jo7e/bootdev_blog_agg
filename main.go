@@ -1,8 +1,7 @@
 package main
 
 import (
-	generichandler "bootdev_blog_agg/pkg/generic"
-	userhandler "bootdev_blog_agg/pkg/user/handlers"
+	"bootdev_blog_agg/pkg/handlers"
 	"log"
 	"net/http"
 	"os"
@@ -25,10 +24,7 @@ func main() {
 		Handler: m,
 	}
 
-	m.HandleFunc("POST /v1/users", userhandler.CreateUserHandler)
-	m.HandleFunc("GET /v1/users", userhandler.GetUserByApikeyHandler)
-	m.HandleFunc("GET /v1/healthz", generichandler.HealthzHandler)
-	m.HandleFunc("GET /v1/err", generichandler.ErrHandler)
+	handlers.BuildRoutes(m)
 
 	log.Fatal(s.ListenAndServe())
 }
