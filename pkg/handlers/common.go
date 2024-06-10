@@ -1,4 +1,4 @@
-package generichandler
+package handlers
 
 import (
 	"bootdev_blog_agg/internal"
