@@ -14,6 +14,7 @@ func BuildRoutes(m *http.ServeMux) {
 	m.HandleFunc("GET /v1/users", apiCfg.middlewareAuth(GetUserByApikeyHandler(apiCfg)))
 
 	m.HandleFunc("POST /v1/feeds", apiCfg.middlewareAuth(CreateFeedHandler(apiCfg)))
+	m.HandleFunc("GET /v1/feeds", GetFeedsHandler(apiCfg))
 
 	m.HandleFunc("GET /v1/healthz", HealthzHandler)
 	m.HandleFunc("GET /v1/err", ErrHandler)
