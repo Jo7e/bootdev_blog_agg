@@ -7,7 +7,7 @@ sqlrun:
 	sudo service postgresql start
 
 sqlcon:
-	sudo -u postgres psql
+	PGPASSWORD=$(DB_PASS) psql -U postgres -d $(DB_NAME)
 
 mig:
 	goose -dir ./sql/schema postgres $(DB_URL) up
