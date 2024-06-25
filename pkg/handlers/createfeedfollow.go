@@ -10,8 +10,6 @@ import (
 	"github.com/google/uuid"
 )
 
-type myUUID uuid.UUID
-
 type CreateFeedFollowRequest struct {
 	FeedId uuid.UUID `json:"feed_id"`
 }
