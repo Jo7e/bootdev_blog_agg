@@ -1,12 +1,13 @@
-package handlers
+package feedfollows
 
 import (
 	"bootdev_blog_agg/internal"
 	"bootdev_blog_agg/internal/database"
+	sqlconfig "bootdev_blog_agg/pkg/config"
 	"net/http"
 )
 
-func GetFeedFollowsHandler(a *ApiConfig) authedHandler {
+func GetFeedFollowsHandler(a *sqlconfig.ApiConfig) sqlconfig.AuthedHandler {
 	return func(w http.ResponseWriter, r *http.Request, user database.User) {
 		ctx := r.Context()
 

@@ -1,8 +1,9 @@
-package handlers
+package users
 
 import (
 	"bootdev_blog_agg/internal"
 	"bootdev_blog_agg/internal/database"
+	sqlconfig "bootdev_blog_agg/pkg/config"
 	"net/http"
 	"time"
 
@@ -17,7 +18,7 @@ type GetUserByApikeyResponse struct {
 	Apikey    string    `json:"apikey"`
 }
 
-func GetUserByApikeyHandler(a *ApiConfig) authedHandler {
+func GetUserByApikeyHandler(a *sqlconfig.ApiConfig) sqlconfig.AuthedHandler {
 	return func(w http.ResponseWriter, r *http.Request, user database.User) {
 		userResponse := internal.DatabaseUserToUser(user)
 

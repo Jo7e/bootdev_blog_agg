@@ -1,4 +1,4 @@
-package handlers
+package routes
 
 import (
 	"bootdev_blog_agg/internal"

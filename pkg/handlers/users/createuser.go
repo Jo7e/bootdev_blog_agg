@@ -1,8 +1,9 @@
-package handlers
+package users
 
 import (
 	"bootdev_blog_agg/internal"
 	"bootdev_blog_agg/internal/database"
+	sqlconfig "bootdev_blog_agg/pkg/config"
 	"encoding/json"
 	"net/http"
 	"time"
@@ -14,7 +15,7 @@ type CreateUserRequest struct {
 	Name string `json:"name"`
 }
 
-func CreateUserHandler(a *ApiConfig) http.HandlerFunc {
+func CreateUserHandler(a *sqlconfig.ApiConfig) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
 
