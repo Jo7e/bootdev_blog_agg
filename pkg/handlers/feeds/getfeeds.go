@@ -1,11 +1,12 @@
-package handlers
+package feeds
 
 import (
 	"bootdev_blog_agg/internal"
+	sqlconfig "bootdev_blog_agg/pkg/config"
 	"net/http"
 )
 
-func GetFeedsHandler(a *ApiConfig) http.HandlerFunc {
+func GetFeedsHandler(a *sqlconfig.ApiConfig) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
 

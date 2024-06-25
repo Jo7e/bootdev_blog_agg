@@ -1,8 +1,9 @@
-package handlers
+package feedfollows
 
 import (
 	"bootdev_blog_agg/internal"
 	"bootdev_blog_agg/internal/database"
+	sqlconfig "bootdev_blog_agg/pkg/config"
 	"encoding/json"
 	"net/http"
 	"time"
@@ -14,7 +15,7 @@ type CreateFeedFollowRequest struct {
 	FeedId uuid.UUID `json:"feed_id"`
 }
 
-func CreateFeedFollowHandler(a *ApiConfig) authedHandler {
+func CreateFeedFollowHandler(a *sqlconfig.ApiConfig) sqlconfig.AuthedHandler {
 	return func(w http.ResponseWriter, r *http.Request, user database.User) {
 		ctx := r.Context()
 

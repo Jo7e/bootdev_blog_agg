@@ -1,7 +1,7 @@
 package main
 
 import (
-	"bootdev_blog_agg/pkg/handlers"
+	"bootdev_blog_agg/pkg/routes"
 	"log"
 	"net/http"
 	"os"
@@ -24,7 +24,7 @@ func main() {
 		Handler: m,
 	}
 
-	handlers.BuildRoutes(m)
+	routes.BuildRoutes(m)
 
 	log.Fatal(s.ListenAndServe())
 }

@@ -1,13 +1,14 @@
-package handlers
+package feedfollows
 
 import (
 	"bootdev_blog_agg/internal"
+	sqlconfig "bootdev_blog_agg/pkg/config"
 	"net/http"
 
 	"github.com/google/uuid"
 )
 
-func DeleteFeedFollowHandler(a *ApiConfig) http.HandlerFunc {
+func DeleteFeedFollowHandler(a *sqlconfig.ApiConfig) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
 
