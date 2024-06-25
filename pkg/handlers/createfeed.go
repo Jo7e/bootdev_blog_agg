@@ -16,12 +16,25 @@ type CreateFeedRequest struct {
 }
 
 type CreateFeedResponse struct {
+	Feed       feedResponse       `json:"feed"`
+	FeedFollow feedFollowResponse `json:"feed_follow"`
+}
+
+type feedResponse struct {
 	ID        uuid.UUID `json:"id"`
 	Name      string    `json:"name"`
 	Url       string    `json:"url"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 	UserID    uuid.UUID `json:"user_id"`
+}
+
+type feedFollowResponse struct {
+	ID        uuid.UUID `json:"id"`
+	FeedID    uuid.UUID `json:"feed_id"`
+	UserID    uuid.UUID `json:"user_id"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }
 
 func CreateFeedHandler(a *ApiConfig) authedHandler {
@@ -52,7 +65,7 @@ func CreateFeedHandler(a *ApiConfig) authedHandler {
 			return
 		}
 
-		feedResponse := CreateFeedResponse{
+		feedResponse := feedResponse{
 			ID:        feed.ID,
 			Name:      feed.Name,
 			Url:       feed.Url,
@@ -61,6 +74,33 @@ func CreateFeedHandler(a *ApiConfig) authedHandler {
 			UserID:    feed.UserID,
 		}
 
-		internal.RespondWithJSON(w, http.StatusCreated, feedResponse)
+		createFeedFollowParams := database.CreateFeedFollowParams{
+			ID:        uuid.New(),
+			FeedID:    feed.ID,
+			UserID:    user.ID,
+			CreatedAt: now,
+			UpdatedAt: now,
+		}
+
+		feedFollow, err := a.DB.CreateFeedFollow(ctx, createFeedFollowParams)
+		if err != nil {
+			internal.RespondWithError(w, http.StatusInternalServerError, err.Error())
+			return
+		}
+
+		feedFollowResponse := feedFollowResponse{
+			ID:        feedFollow.ID,
+			FeedID:    feedFollow.FeedID,
+			UserID:    feedFollow.UserID,
+			CreatedAt: feedFollow.CreatedAt,
+			UpdatedAt: feedFollow.UpdatedAt,
+		}
+
+		createFeedResponse := CreateFeedResponse{
+			Feed:       feedResponse,
+			FeedFollow: feedFollowResponse,
+		}
+
+		internal.RespondWithJSON(w, http.StatusCreated, createFeedResponse)
 	}
 }
