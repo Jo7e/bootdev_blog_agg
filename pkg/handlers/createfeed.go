@@ -16,25 +16,8 @@ type CreateFeedRequest struct {
 }
 
 type CreateFeedResponse struct {
-	Feed       feedResponse       `json:"feed"`
-	FeedFollow feedFollowResponse `json:"feed_follow"`
-}
-
-type feedResponse struct {
-	ID        uuid.UUID `json:"id"`
-	Name      string    `json:"name"`
-	Url       string    `json:"url"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
-	UserID    uuid.UUID `json:"user_id"`
-}
-
-type feedFollowResponse struct {
-	ID        uuid.UUID `json:"id"`
-	FeedID    uuid.UUID `json:"feed_id"`
-	UserID    uuid.UUID `json:"user_id"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+	Feed       internal.Feed       `json:"feed"`
+	FeedFollow internal.FeedFollow `json:"feed_follow"`
 }
 
 func CreateFeedHandler(a *ApiConfig) authedHandler {
@@ -59,20 +42,13 @@ func CreateFeedHandler(a *ApiConfig) authedHandler {
 			UserID:    user.ID,
 		}
 
-		feed, err := a.DB.CreateFeed(ctx, createFeedParams)
+		databaseFeed, err := a.DB.CreateFeed(ctx, createFeedParams)
 		if err != nil {
 			internal.RespondWithError(w, http.StatusInternalServerError, err.Error())
 			return
 		}
 
-		feedResponse := feedResponse{
-			ID:        feed.ID,
-			Name:      feed.Name,
-			Url:       feed.Url,
-			CreatedAt: feed.CreatedAt,
-			UpdatedAt: feed.UpdatedAt,
-			UserID:    feed.UserID,
-		}
+		feed := internal.DatabaseFeedToFeed(databaseFeed)
 
 		createFeedFollowParams := database.CreateFeedFollowParams{
 			ID:        uuid.New(),
@@ -82,23 +58,17 @@ func CreateFeedHandler(a *ApiConfig) authedHandler {
 			UpdatedAt: now,
 		}
 
-		feedFollow, err := a.DB.CreateFeedFollow(ctx, createFeedFollowParams)
+		databaseFeedFollow, err := a.DB.CreateFeedFollow(ctx, createFeedFollowParams)
 		if err != nil {
 			internal.RespondWithError(w, http.StatusInternalServerError, err.Error())
 			return
 		}
 
-		feedFollowResponse := feedFollowResponse{
-			ID:        feedFollow.ID,
-			FeedID:    feedFollow.FeedID,
-			UserID:    feedFollow.UserID,
-			CreatedAt: feedFollow.CreatedAt,
-			UpdatedAt: feedFollow.UpdatedAt,
-		}
+		feedFollow := internal.DatabaseFeedFollowToFeedFollow(databaseFeedFollow)
 
 		createFeedResponse := CreateFeedResponse{
-			Feed:       feedResponse,
-			FeedFollow: feedFollowResponse,
+			Feed:       feed,
+			FeedFollow: feedFollow,
 		}
 
 		internal.RespondWithJSON(w, http.StatusCreated, createFeedResponse)

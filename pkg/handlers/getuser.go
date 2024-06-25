@@ -19,13 +19,7 @@ type GetUserByApikeyResponse struct {
 
 func GetUserByApikeyHandler(a *ApiConfig) authedHandler {
 	return func(w http.ResponseWriter, r *http.Request, user database.User) {
-		userResponse := GetUserByApikeyResponse{
-			ID:        user.ID,
-			Name:      user.Name,
-			CreatedAt: user.CreatedAt,
-			UpdatedAt: user.UpdatedAt,
-			Apikey:    user.Apikey,
-		}
+		userResponse := internal.DatabaseUserToUser(user)
 
 		internal.RespondWithJSON(w, http.StatusCreated, userResponse)
 	}

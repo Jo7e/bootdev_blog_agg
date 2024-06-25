@@ -14,14 +14,6 @@ type CreateFeedFollowRequest struct {
 	FeedId uuid.UUID `json:"feed_id"`
 }
 
-type CreateFeedFollowResponse struct {
-	ID        uuid.UUID `json:"id"`
-	FeedID    uuid.UUID `json:"feed_id"`
-	UserID    uuid.UUID `json:"user_id"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
-}
-
 func CreateFeedFollowHandler(a *ApiConfig) authedHandler {
 	return func(w http.ResponseWriter, r *http.Request, user database.User) {
 		ctx := r.Context()
@@ -43,20 +35,14 @@ func CreateFeedFollowHandler(a *ApiConfig) authedHandler {
 			UpdatedAt: now,
 		}
 
-		feed, err := a.DB.CreateFeedFollow(ctx, createFeedFollowParams)
+		databaseFeedFellow, err := a.DB.CreateFeedFollow(ctx, createFeedFollowParams)
 		if err != nil {
 			internal.RespondWithError(w, http.StatusInternalServerError, err.Error())
 			return
 		}
 
-		feedFollowResponse := CreateFeedFollowResponse{
-			ID:        feed.ID,
-			FeedID:    feed.FeedID,
-			UserID:    feed.UserID,
-			CreatedAt: feed.CreatedAt,
-			UpdatedAt: feed.UpdatedAt,
-		}
+		feedFellow := internal.DatabaseFeedFollowToFeedFollow(databaseFeedFellow)
 
-		internal.RespondWithJSON(w, http.StatusCreated, feedFollowResponse)
+		internal.RespondWithJSON(w, http.StatusCreated, feedFellow)
 	}
 }
